@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<j:jelly trim="false" xmlns:j="jelly:core" xmlns:g="glide" xmlns:j2="null" xmlns:g2="null">
+	<g:ui_form id="transfer_case_dialog">
+		<script src="scripts/heisenberg/heisenberg_all.js" />
+		<g:requires name="styles/heisenberg/heisenberg_all.css" includes="true" />
+		<j:set var="jvar_sys_id" value="${sysparm_sys_id}" />
+		<j:set var="jvar_table_name" value="${sysparm_table_name}" />
+		<g:evaluate jelly="true">
+			var subjectPerson = jelly.sysparm_subject_person;
+			var services = new sn_hr_core.hr_CaseCreation().getServicesForUser(subjectPerson || '', true);
+			var servicesString = JSON.stringify(services);
+		</g:evaluate>
+		<script>
+			var services = '${JS:servicesString}';
+		</script>
+		<div class="col-md-12" style="color:tomato; text-align:center; font-weight:bold; margin-bottom:8px; font-size:larger;">
+			${gs.getMessage("Warning!")}
+		</div>
+		<div class="col-md-12" style="margin-bottom:12px;">
+			${gs.getMessage("The current case and its child tasks will be closed.")}
+		</div>
+		<div class="vsplit col-md-12 form-group form-horizontal">
+			<div class="col-md-3 text-right" style="padding-left:3px;">
+				<g:form_label for="service_select">
+					${gs.getMessage("Transfer case to")}
+				</g:form_label>
+			</div>
+			<div class="col-md-9" style="padding-left:14px">
+				<input id="service_input" class="select2 form-control"/>
+			</div>
+		</div>
+		<footer id="okCancel" class="modal-footer">
+			<input type="hidden" id="task_sys_id" name="task_sys_id" value="${sysparm_sys_id}" aria-label="task_sys_id"></input>
+			<input type="hidden" id="task_table_name" name="task_table_name" value="${sysparm_table_name}" aria-label="task_sys_id2"></input>
+			<input type="hidden" id="selected_service" name="selected_service" value="" aria-label="task_sys_id3"></input>
+			<button onclick="return submitCancel();" id="cancel" class="btn btn-default">
+				${gs.getMessage('Cancel')}
+			</button>
+			<button id="ok" class="btn btn-primary" onclick="return submitOk(); ">
+				${gs.getMessage('Ok')}
+			</button>
+		 </footer>
+	</g:ui_form>
+</j:jelly>
